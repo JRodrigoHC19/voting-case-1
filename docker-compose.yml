@@ -15,7 +15,6 @@ services:
   redis:
     build: 
       context: ./redis
-      dockerfile: Dockerfile
     volumes:
       - "./healthchecks:/healthchecks"
     networks:
