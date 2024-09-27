@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  vote:
+    build: 
+      context: ./vote
+    depends_on:
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./vote:/usr/local/app
+    ports:
+      - "5000:80"
+    networks:
+      - back-tier
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+
+  redis:
+    build: 
+      context: ./redis
+    volumes:
+      - "./healthchecks:/healthchecks"
+    networks:
+      - back-tier
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+networks:
+  back-tier:
+    driver: overlay
