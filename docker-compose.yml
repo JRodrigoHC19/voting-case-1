@@ -6,12 +6,6 @@ services:
     depends_on:
       redis:
         condition: service_healthy
-    healthcheck: 
-      test: ["CMD", "curl", "-f", "http://localhost"]
-      interval: 15s
-      timeout: 5s
-      retries: 3
-      start_period: 10s
     volumes:
      - ./vote:/usr/local/app
     ports:
@@ -20,12 +14,11 @@ services:
       - back-tier
 
   redis:
-    image: redis:alpine
+    build: 
+      context: ./redis
+      dockerfile: Dockerfile
     volumes:
       - "./healthchecks:/healthchecks"
-    healthcheck:
-      test: /healthchecks/redis.sh
-      interval: "5s"
     networks:
       - back-tier
 
